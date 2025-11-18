@@ -163,11 +163,13 @@ def run_batch_inference(sensor_config: dict, root_dir: str = None) -> bool:
             monitor_fg.days_before_forecast_day == 1).read()
         air_quality_df = air_quality_fg.read()
 
-        outcome_df = air_quality_df[['date', 'pm25']]
-        preds_df = monitoring_df[['date', 'predicted_pm25']]
+        outcome_df = air_quality_df[['date', 'pm25', 'city', 'street']]
+        preds_df = monitoring_df[['date', 'predicted_pm25', 'city', 'street']]
 
-        hindcast_df = pd.merge(preds_df, outcome_df, on="date")
+        hindcast_df = pd.merge(preds_df, outcome_df, on=[
+                               "date", "city", "street"])
         hindcast_df = hindcast_df.sort_values(by=['date'])
+        hindcast_df = hindcast_df[hindcast_df['street'] == street]
 
         if len(hindcast_df) == 0:
             print("No hindcast data available yet (this is normal initially)")

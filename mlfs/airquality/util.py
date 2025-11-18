@@ -351,16 +351,36 @@ def check_file_path(file_path):
         print(f"File successfully found at the path: {file_path}")
 
 
-def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, model):
-    features_df = weather_fg.read()
-    features_df = features_df.sort_values(by=['date'], ascending=True)
-    features_df = features_df.tail(10)
-    features_df['predicted_pm25'] = model.predict(
-        features_df[['temperature_2m_mean', 'precipitation_sum', 'wind_speed_10m_max', 'wind_direction_10m_dominant']])
-    df = pd.merge(features_df, air_quality_df[[
-                  'date', 'pm25', 'street', 'country']], on="date")
-    df['days_before_forecast_day'] = 1
-    hindcast_df = df
-    df = df.drop('pm25', axis=1)
-    monitor_fg.insert(df, write_options={"wait_for_job": True})
+def backfill_predictions_for_monitoring(weather_fg, air_quality_df_filterd, monitor_fg, model):
+    air_quality_filtered = air_quality_filtered.sort_values('date').tail(10)
+
+    # Get corresponding weather data and merge
+    weather_data = weather_fg.read()
+    features_df = pd.merge(air_quality_filtered[['date', 'pm25', 'pm25_lag1', 'pm25_lag2', 'pm25_lag3', 'day_of_week', 'city', 'street', 'country']],
+                           weather_data, on=['date', 'city'], how='inner')
+
+    if len(features_df) > 0:
+        # Make predictions using the actual historical lagged features
+        prediction_features = ['pm25_lag1', 'pm25_lag2', 'pm25_lag3', 'day_of_week',
+                               'temperature_2m_mean', 'precipitation_sum',
+                               'wind_speed_10m_max', 'wind_direction_10m_dominant',
+                               'relative_humidity_2m_mean', 'surface_pressure_mean']
+
+        features_df['predicted_pm25'] = model.predict(
+            features_df[prediction_features])
+        features_df['days_before_forecast_day'] = 1
+
+        # Prepare hindcast dataframe (with actual PM2.5 for plotting)
+        hindcast_df = features_df[['date', 'pm25', 'predicted_pm25']].copy()
+
+        # Prepare monitoring dataframe (without actual PM2.5)
+        monitor_df = features_df.drop('pm25', axis=1)
+
+        # Insert to monitoring feature group
+        monitor_fg.insert(monitor_df, write_options={"wait_for_job": True})
+
+        print(f"Backfilled {len(hindcast_df)} predictions")
+    else:
+        print("No matching data found for backfill")
+        hindcast_df = pd.DataFrame()
     return hindcast_df
