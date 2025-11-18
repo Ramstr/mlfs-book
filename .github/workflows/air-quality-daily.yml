@@ -31,7 +31,7 @@ jobs:
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
         run: |
-          make aq-inference
+          python run_air_quality_pipelines.py
       - name: github pages publish
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
