@@ -1,0 +1,52 @@
+{
+  "country": "germany",
+  "city": "stuttgart",
+  "sensors": [
+    {
+      "street": "arnulf-klett-platz",
+      "feed_id": "11226",
+      "url": "https://api.waqi.info/feed/@11226",
+      "display_name": "Arnulf-Klett-Platz",
+      "csv_name": "stuttgart-arnulf-klett-platz-air-quality.csv",
+      "latitude": "48.781080",
+      "longitude": "9.183948"
+    },
+    {
+      "street": "am-neckartor",
+      "feed_id": "11228",
+      "url": "https://api.waqi.info/feed/@11228",
+      "display_name": "Stuttgart Am Neckartor",
+      "csv_name": "stuttgart-am neckartor-air-quality.csv",
+      "latitude": "48.7997",
+      "longitude": "9.1994"
+    },
+    {
+      "street": "bad-cannstatt",
+      "feed_id": "6172",
+      "url": "https://api.waqi.info/feed/@6172",
+      "display_name": "Bad Cannstatt",
+      "csv_name": "stuttgart-bad-cannstatt-air-quality.csv",
+      "latitude": "48.7997",
+      "longitude": "9.1994"
+    },
+    {
+      "street": "ludwigsburg",
+      "feed_id": "6164",
+      "url": "https://api.waqi.info/feed/@6164",
+      "display_name": "Ludwigsburg",
+      "csv_name": "ludwigsburg-air-quality.csv",
+      "latitude": "48.7997",
+      "longitude": "9.1994"
+    },
+    {
+      "street": "bernhausen",
+      "feed_id": "6154",
+      "url": "https://api.waqi.info/feed/@6154",
+      "display_name": "Bernhausen",
+      "csv_name": "bernhausen-air-quality.csv",
+      "latitude": "48.7997",
+      "longitude": "9.1994"
+    }
+
+  ]
+}
