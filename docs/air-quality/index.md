@@ -27,6 +27,3 @@
 ![Am Neckartor Hindcast](./assets/img/pm25_hindcast_1day_am-neckartor.png)
 
 ---
-
-There is also a Python program to interact with the air quality ML system using language (text, voice),
-powered by a [function-calling LLM](https://www.hopsworks.ai/dictionary/function-calling-with-llms).
